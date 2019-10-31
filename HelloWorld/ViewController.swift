@@ -8,105 +8,93 @@
 
 import UIKit
 import MobileCoreServices
+import AVFoundation
 
-class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
-    @IBOutlet var imgView: UIImageView!
+    @IBOutlet var previewView: UIView!
+    @IBOutlet var captureImageView: UIImageView!
     
-    let imagePicker: UIImagePickerController! = UIImagePickerController()
-    var captureImage: UIImage!
-    var videoURL: URL!
-    var flagImageSave = false
+    var captureSession: AVCaptureSession!
+    var stillImageOutput: AVCapturePhotoOutput!
+    var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func btnCaptureImageFromCamera(_ sender: UIButton) {
-        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
-            flagImageSave = true
-            
-            imagePicker.delegate = self
-            imagePicker.sourceType = .camera
-            imagePicker.mediaTypes = [kUTTypeImage as String]
-            imagePicker.allowsEditing = false
-            
-            self.present(imagePicker, animated: true, completion: nil)
-        } else {
-            alert("Camera inaccessible", message: "Application cannot access the camera.")
-        }
-    }
-    
-    @IBAction func btnLoadImageFromGallery(_ sender: UIButton) {
-        if (UIImagePickerController.isSourceTypeAvailable(.photoLibrary)) {
-            flagImageSave = false
-            
-            imagePicker.delegate = self
-            imagePicker.sourceType = .photoLibrary
-            imagePicker.mediaTypes = [kUTTypeImage as String]
-            imagePicker.allowsEditing = true
-            
-            self.present(imagePicker, animated: true, completion: nil)
-        } else {
-            alert("Photo album inaccessible", message: "Application cannot access the photo album.")
-        }
-    }
-    
-    @IBAction func btnRecordVideoFromCamera(_ sender: UIButton) {
-        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
-            flagImageSave = true
-            
-            imagePicker.delegate = self
-            imagePicker.sourceType = .camera
-            imagePicker.mediaTypes = [kUTTypeMovie as String]
-            imagePicker.allowsEditing = false
-            
-            self.present(imagePicker, animated: true, completion: nil)
-        } else {
-            alert("Camera inaccessible", message: "Application cannot access the camera.")
-        }
-    }
-    
-    @IBAction func btnLoadVideoFromGallery(_ sender: UIButton) {
-        if (UIImagePickerController.isSourceTypeAvailable(.photoLibrary)) {
-            flagImageSave = false
-            
-            imagePicker.delegate = self
-            imagePicker.sourceType = .photoLibrary
-            imagePicker.mediaTypes = [kUTTypeMovie as String]
-            imagePicker.allowsEditing = false
-            
-            present(imagePicker, animated: true, completion: nil)
-        } else {
-            alert("Photo album inaccessable", message: "Application cannot access the photo album.")
-        }
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let mediaType = info[UIImagePickerController.InfoKey.mediaType] as! NSString
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // Setup camera here..
+        captureSession = AVCaptureSession()
+        captureSession.sessionPreset = .medium
         
-        if mediaType.isEqual(to: kUTTypeImage as NSString as String) {
-            captureImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-            
-            if flagImageSave {
-                UIImageWriteToSavedPhotosAlbum(captureImage, self, nil, nil)
-            }
-            
-            imgView.image = captureImage
-        } else if mediaType.isEqual(to: kUTTypeMovie as NSString as String) {
-            if flagImageSave {
-                videoURL = info[UIImagePickerController.InfoKey.mediaURL] as! URL
-                
-                UISaveVideoAtPathToSavedPhotosAlbum(videoURL.relativePath, self, nil, nil)
-            }
+        guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
+            else {
+                print("Unable to access back camera!")
+                return
         }
         
-        self.dismiss(animated: true, completion: nil)
+        // 8. Prepare the input
+        do {
+            let input = try AVCaptureDeviceInput(device: backCamera)
+            
+            // 9. Configure the output
+            stillImageOutput = AVCapturePhotoOutput()
+            
+            // 10. Attach the input and output
+            if captureSession.canAddInput(input) && captureSession.canAddOutput(stillImageOutput) {
+                captureSession.addInput(input)
+                captureSession.addOutput(stillImageOutput)
+                self.setupLivePreview()
+            }
+        }
+        catch let error {
+            print("Error Unable to initialize back camera: \(error.localizedDescription)")
+        }
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.dismiss(animated: true, completion: nil)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.captureSession.stopRunning()
+    }
+    
+    // 14. Taking the photo
+    @IBAction func didTakePhoto(_ sender: Any) {
+        
+        let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+        stillImageOutput.capturePhoto(with: settings, delegate: self)
+    }
+    
+    // 11. Configure the live preview
+    func setupLivePreview() {
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        videoPreviewLayer.videoGravity = .resizeAspect
+        videoPreviewLayer.connection?.videoOrientation = .portrait
+        
+        previewView.layer.addSublayer(videoPreviewLayer)
+        
+        // 12. Start the session on the background thread
+        DispatchQueue.global(qos: .userInitiated).async {   // [weak self] in
+            self.captureSession.startRunning()
+            
+            // 13. Size the preview Layer to fit the Preview view
+            DispatchQueue.main.async {
+                self.videoPreviewLayer.frame = self.previewView.bounds
+            }
+        }
+    }
+    
+    // 15. Process the captured photo
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        
+        guard let imageData = photo.fileDataRepresentation()
+            else { return }
+        
+        let image = UIImage(data: imageData)
+        captureImageView.image = image
     }
     
     func alert(_ title: String, message: String) {

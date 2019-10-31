@@ -15,61 +15,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Q7a-4v-34t">
-                                <rect key="frame" x="16" y="44" width="343" height="714"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RPC-vs-tZE">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QER-Ao-LIs">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="634"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gnh-8e-zak">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="661"/>
                                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                    </imageView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="8eZ-CM-ack">
-                                        <rect key="frame" x="0.0" y="634" width="343" height="40"/>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="0Bd-6K-Aqi">
+                                        <rect key="frame" x="0.0" y="661" width="375" height="117"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xfh-9M-fYZ">
-                                                <rect key="frame" x="0.0" y="0.0" width="171.66666666666666" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="HCg-qW-NpC"/>
-                                                </constraints>
-                                                <state key="normal" title="사진 촬영"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5fy-yd-E2b">
+                                                <rect key="frame" x="0.0" y="0.0" width="185" height="117"/>
+                                                <state key="normal" title="Button"/>
                                                 <connections>
-                                                    <action selector="btnCaptureImageFromCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PjS-0k-XQh"/>
+                                                    <action selector="didTakePhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="IYz-up-JdB"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Be2-tP-kr5">
-                                                <rect key="frame" x="171.66666666666663" y="0.0" width="171.33333333333337" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="1aX-tS-4qk"/>
-                                                </constraints>
-                                                <state key="normal" title="비디오 촬영"/>
-                                                <connections>
-                                                    <action selector="btnRecordVideoFromCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tlY-Gj-kqa"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="p9B-Qg-bAu">
-                                        <rect key="frame" x="0.0" y="674" width="343" height="40"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l9B-8G-Z9d">
-                                                <rect key="frame" x="0.0" y="0.0" width="171.66666666666666" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="B7b-g9-tay"/>
-                                                </constraints>
-                                                <state key="normal" title="사진 불러오기"/>
-                                                <connections>
-                                                    <action selector="btnLoadImageFromGallery:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WsZ-bo-MCU"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z6X-NS-emu">
-                                                <rect key="frame" x="171.66666666666663" y="0.0" width="171.33333333333337" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="idb-DD-3Mw"/>
-                                                </constraints>
-                                                <state key="normal" title="비디오 불러오기"/>
-                                                <connections>
-                                                    <action selector="btnLoadVideoFromGallery:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9N8-WC-IPy"/>
-                                                </connections>
-                                            </button>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wuH-va-R0Z">
+                                                <rect key="frame" x="190" y="0.0" width="185" height="117"/>
+                                            </imageView>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -77,15 +42,16 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Q7a-4v-34t" secondAttribute="bottom" constant="20" id="6Nf-Kh-KsC"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Q7a-4v-34t" secondAttribute="trailing" constant="16" id="DBB-Lq-b0x"/>
-                            <constraint firstItem="Q7a-4v-34t" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="TR8-BI-5MQ"/>
-                            <constraint firstItem="Q7a-4v-34t" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="bI9-9O-3SB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="RPC-vs-tZE" secondAttribute="trailing" id="SeF-GQ-lDu"/>
+                            <constraint firstItem="RPC-vs-tZE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="izc-TH-Cun"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="RPC-vs-tZE" secondAttribute="bottom" id="oGS-Z1-SOF"/>
+                            <constraint firstItem="RPC-vs-tZE" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="qxF-cd-Vgz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="imgView" destination="QER-Ao-LIs" id="Krn-F1-MFl"/>
+                        <outlet property="captureImageView" destination="wuH-va-R0Z" id="qGr-c9-3RV"/>
+                        <outlet property="previewView" destination="gnh-8e-zak" id="CWc-bM-eOy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
